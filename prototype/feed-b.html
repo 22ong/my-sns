@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>하루조각 피드 시안 B</title>
+  <style>
+    :root {
+      --page: #e4e1db;
+      --ivory: #f6f4f0;
+      --card: #ffffff;
+      --line: #e2dfd8;
+      --ink: #1d1d1b;
+      --ink-soft: #7a7772;
+      --accent: #1d1d1b;
+      --accent-soft: #ebe8e2;
+      --shadow: 0 1px 0 rgba(29, 29, 27, 0.06);
+      --radius-card: 4px;
+      --radius-photo: 2px;
+      --serif: "Nanum Myeongjo", "AppleMyungjo", "Batang", "Noto Serif KR", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px;
+      background: var(--page);
+      color: var(--ink);
+      font-family: var(--serif);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font-family: inherit; }
+
+    /* 휴대폰 화면 */
+    .phone {
+      width: 100%;
+      max-width: 430px;
+      background: var(--ivory);
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(29, 29, 27, 0.12);
+      overflow: hidden;
+    }
+
+    @media (max-width: 460px) {
+      body { padding: 0; }
+      .phone { border-radius: 0; box-shadow: none; min-height: 100vh; }
+    }
+
+    /* 상단 */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 40px 24px 20px;
+      background: rgba(246, 244, 240, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--ink);
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 6px;
+    }
+    .header h1 span { display: none; }
+    .header p {
+      margin-top: 8px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--ink-soft);
+    }
+
+    /* 피드 */
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding: 28px 24px 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      padding: 20px 20px 24px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .who { flex: 1; min-width: 0; }
+    .author { font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
+    .time { font-size: 11px; color: var(--ink-soft); margin-top: 3px; letter-spacing: 0.5px; }
+    .more {
+      border: 0;
+      background: none;
+      color: var(--ink-soft);
+      font-size: 18px;
+      letter-spacing: 1px;
+      padding: 4px 6px;
+      cursor: pointer;
+    }
+
+    /* 사진 */
+    .photo-wrap {
+      position: relative;
+      border-radius: var(--radius-photo);
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      background: var(--line);
+    }
+    .photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .count-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 8px;
+      border-radius: 0;
+      background: var(--ivory);
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 0;
+      background: #cfcbc3;
+    }
+    .dot.active {
+      width: 5px;
+      background: var(--accent);
+    }
+
+    /* 본문 */
+    .content {
+      margin-top: 16px;
+      font-size: 15px;
+      line-height: 1.85;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+    .content.clamped {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .read-more {
+      margin-top: 6px;
+      border: 0;
+      border-bottom: 1px solid var(--ink);
+      background: none;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* 무한 스크롤 상태 (모양 보기용) */
+    .states {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 12px 24px 48px;
+    }
+    .state-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 26px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-card);
+      font-size: 14px;
+      color: var(--ink-soft);
+      text-align: center;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent-soft);
+      border-top-color: var(--accent);
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .end-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .end-line::before,
+    .end-line::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--ink);
+      opacity: 0.25;
+    }
+    .end-mark { color: var(--ink); font-size: 12px; }
+
+    .state.error { color: var(--ink); }
+    .retry {
+      border: 1px solid var(--ink);
+      border-radius: 2px;
+      padding: 9px 22px;
+      background: transparent;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+    .retry:active { background: var(--ink); color: var(--ivory); }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <header class="header">
+      <h1>하루조각<span>.</span></h1>
+      <p>사진 한 장으로 남기는 오늘의 조각</p>
+    </header>
+
+    <section class="feed" id="feed"></section>
+
+    <section class="states">
+      <div>
+        <div class="state-label">상태 · 더 불러오는 중</div>
+        <div class="state">
+          <div class="spinner"></div>
+          조각을 더 가져오고 있어요
+        </div>
+      </div>
+
+      <div>
+        <div class="state-label">상태 · 더 없음</div>
+        <div class="state">
+          <div class="end-line"><span class="end-mark">✦</span></div>
+          모든 조각을 다 봤어요
+        </div>
+      </div>
+
+      <div>
+        <div class="state-label">상태 · 오류</div>
+        <div class="state error">
+          조각을 불러오지 못했어요.<br />다시 시도해 주세요
+          <button class="retry" type="button">다시 시도</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const minutesAgo = (m) => new Date(Date.now() - m * 60 * 1000).toISOString();
+
+    // docs/요구사항.md 의 게시물 항목과 같은 모양
+    const posts = [
+      {
+        id: "p1",
+        author: "서윤",
+        content: "주말 아침 산책길. 빵집 들렀다가 강가까지 천천히 걸었다 🍞",
+        images: [
+          "https://picsum.photos/seed/morning/600/600",
+          "https://picsum.photos/seed/bakery/600/600",
+          "https://picsum.photos/seed/river/600/600",
+          "https://picsum.photos/seed/sunset/600/600",
+        ],
+        created_at: minutesAgo(12),
+      },
+      {
+        id: "p2",
+        author: "민재",
+        content: "오늘의 커피 ☕️ 창가 자리가 비어 있어서 운이 좋았던 날",
+        images: ["https://picsum.photos/seed/coffee/600/600"],
+        created_at: minutesAgo(180),
+      },
+      {
+        id: "p3",
+        author: "하린",
+        content:
+          "비 오는 날엔 괜히 오래된 노트를 꺼내 보게 된다. 작년 이맘때 적어 둔 문장들을 읽다 보니, 그땐 그렇게 커 보이던 고민들이 지금은 기억도 잘 나지 않는다는 게 신기했다.\n\n그래서 오늘도 사소한 걸 적어 두기로 했다. 따뜻한 차 한 잔, 창문에 맺힌 빗방울, 퇴근길에 들은 노래 한 곡. 일 년 뒤의 내가 이 조각들을 보면서 오늘을 조금 더 다정하게 기억해 주면 좋겠다.",
+        images: ["https://picsum.photos/seed/rainyday/600/600"],
+        created_at: minutesAgo(60 * 26),
+      },
+    ];
+
+    function formatTime(iso) {
+      const diff = (Date.now() - new Date(iso).getTime()) / 1000 / 60;
+      if (diff < 1) return "방금 전";
+      if (diff < 60) return `${Math.floor(diff)}분 전`;
+      if (diff < 60 * 24) return `${Math.floor(diff / 60)}시간 전`;
+      if (diff < 60 * 24 * 7) return `${Math.floor(diff / 60 / 24)}일 전`;
+      const d = new Date(iso);
+      return `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
+    }
+
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function renderPhotos(images) {
+      const box = el("div");
+      const wrap = el("div", "photo-wrap");
+      const img = el("img");
+      img.src = images[0];
+      img.alt = "";
+      img.loading = "lazy";
+      wrap.append(img);
+      box.append(wrap);
+
+      // 사진 1장: 사진만 / 여러 장: 장수 배지 + 점
+      if (images.length > 1) {
+        wrap.append(el("span", "count-badge", `1/${images.length}`));
+        const dots = el("div", "dots");
+        images.forEach((_, i) => dots.append(el("span", i === 0 ? "dot active" : "dot")));
+        box.append(dots);
+      }
+      return box;
+    }
+
+    function renderCard(post) {
+      const card = el("article", "card");
+
+      const head = el("div", "card-head");
+      const who = el("div", "who");
+      who.append(el("div", "author", post.author), el("div", "time", formatTime(post.created_at)));
+      head.append(el("div", "avatar", post.author.slice(0, 1)), who, el("button", "more", "···"));
+      card.append(head, renderPhotos(post.images));
+
+      const content = el("p", "content", post.content);
+      card.append(content);
+
+      // 긴 글은 3줄까지 보여주고 '더 보기'
+      requestAnimationFrame(() => {
+        content.classList.add("clamped");
+        if (content.scrollHeight > content.clientHeight + 1) {
+          const btn = el("button", "read-more", "더 보기");
+          btn.type = "button";
+          btn.addEventListener("click", () => {
+            const open = content.classList.toggle("clamped");
+            btn.textContent = open ? "더 보기" : "접기";
+          });
+          card.append(btn);
+        } else {
+          content.classList.remove("clamped");
+        }
+      });
+
+      return card;
+    }
+
+    const feed = document.getElementById("feed");
+    posts.forEach((post) => feed.append(renderCard(post)));
+  </script>
+</body>
+</html>
