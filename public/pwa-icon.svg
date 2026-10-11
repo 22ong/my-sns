@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 하루조각 앱 아이콘: 아이보리 바탕에 겹쳐 놓은 사진 조각 세 장 -->
+  <rect width="512" height="512" fill="#faf6ef"/>
+  <rect x="150" y="118" width="230" height="230" rx="28" fill="#f3dfd5" transform="rotate(-12 265 233)"/>
+  <rect x="160" y="140" width="230" height="230" rx="28" fill="#dccfc0" transform="rotate(8 275 255)"/>
+  <g transform="rotate(-3 256 286)">
+    <rect x="141" y="171" width="230" height="230" rx="28" fill="#c8694a"/>
+    <circle cx="315" cy="227" r="22" fill="#faf6ef"/>
+    <path d="M141 343 L211 273 L262 324 L296 290 L371 365 L371 373 Q371 401 343 401 L169 401 Q141 401 141 373 Z" fill="#faf6ef" opacity="0.9"/>
+  </g>
+</svg>
