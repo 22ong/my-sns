@@ -1,5 +1,4 @@
 import Feed from './components/Feed'
-import { samplePosts } from './data/samplePosts'
 import './App.css'
 
 function App() {
@@ -12,7 +11,7 @@ function App() {
         <p>사진 한 장으로 남기는 오늘의 조각</p>
       </header>
 
-      <Feed posts={samplePosts} />
+      <Feed />
     </main>
   )
 }

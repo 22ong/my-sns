@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# 환경 변수 (키 값이 들어 있어서 저장소에 넣지 않음)
+.env
+.env.local
+.env.*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
