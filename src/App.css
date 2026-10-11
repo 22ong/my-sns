@@ -145,6 +145,43 @@ body {
   display: block;
 }
 
+/* 캐러셀: 정사각형 칸을 꽉 채움 */
+.photo-wrap .swiper {
+  height: 100%;
+}
+
+/* 몇 번째 사진인지 (사진 여러 장일 때만) */
+.count-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(59, 48, 42, 0.55);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+}
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #dccfc0;
+  transition: width 0.2s, background 0.2s;
+}
+.dot.active {
+  width: 18px;
+  background: var(--terracotta);
+}
+
 /* 본문 */
 .content {
   margin-top: 12px;
